@@ -230,3 +230,35 @@ class FileTable(Base):
                 state=self.mylist_state,
                 viewed=self.mylist_viewed,
                 updated=self.updated)
+
+
+class GroupRelationTable(Base):
+    __tablename__ = 'group_relation'
+    pk = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    group_pk = Column(BigInteger().with_variant(Integer, "sqlite"), ForeignKey('group.pk'))
+    anime_pk = Column(BigInteger().with_variant(Integer, "sqlite"), ForeignKey('anime.pk'))
+
+
+class GroupTable(Base):
+    __tablename__ = 'group'
+    pk = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    animes = relationship(AnimeTable, secondary='GroupRelationTable', backref="groups")
+
+    gid = Column(BigInteger().with_variant(Integer, "sqlite"), unique=True)
+    rating = Column(BigInteger().with_variant(Integer, "sqlite"))
+    votes = Column(BigInteger().with_variant(Integer, "sqlite"))
+    anime_count = Column(BigInteger().with_variant(Integer, "sqlite"))
+    file_count = Column(BigInteger().with_variant(Integer, "sqlite"))
+    name = Column(String(128), nullable=True)
+    short_name = Column(String(128), nullable=True)
+    irc_channel = Column(String(128), nullable=True)
+    irc_server = Column(String(128), nullable=True)
+    url = Column(String(128), nullable=True)
+    picname = Column(String(128), nullable=True)
+    founded = Column(DateTime(timezone=False), nullable=True)
+    disbanded = Column(DateTime(timezone=False), nullable=True)
+    date_flags = Column(BigInteger().with_variant(Integer, "sqlite"))
+    last_release = Column(DateTime(timezone=False), nullable=True)
+    last_activity = Column(DateTime(timezone=False), nullable=True)
+    related_groups = Column(BigInteger().with_variant(Integer, "sqlite"))
+
